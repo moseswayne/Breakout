@@ -1,0 +1,31 @@
+Name: Moses Wayne
+netID: msw38
+Project: Breakout Game
+
+Plan:
+
+Variant of Breakout that I found interesting:
+I found the "Worms" variant of Breakout to be the most interesting because of 
+all of the different power up mechanics. I found that the power ups to the game
+added a certain depth to Breakout by making it much more interesting while 
+still staying true to the core mechanics of Breakout. There is a lot of 
+flexibility in the direction in which to take Breakout in adding power ups to 
+the game both in terms of differing functionality and playability because of
+the vast number of possible power ups to use. I also thought that the falling
+power up containers was a nice touch in the game. 
+I also found the "Vortex" variant of breakout to be interesting in that the 
+game's mechanic for movement is very different from all of the other variants 
+of Breakout. Since the bar for the game rotates in a circle, there are no 
+bounds for its movement, and it is able to hit the ball from any side. I found
+this mechanic of the game to be interesting. 
+
+Plan for development of the Breakout game:
+My intention for this game of Breakout is to make a variant of Breakout that 
+stays true to the main component of Breakout while adding elements to make the
+game significantly more challenging and entertaining. This would add elements
+like both a top and bottom bar to the game and other elements like bricks (the 
+blocks in the game) reappearing after some event.
+
+Levels:
+Different levels of game will have different block layouts with higher levels 
+having blocks that are more difficult to break. 
