@@ -28,4 +28,31 @@ blocks in the game) reappearing after some event.
 
 Levels:
 Different levels of game will have different block layouts with higher levels 
-having blocks that are more difficult to break. 
+having blocks that are more difficult to break (numerous hits needed to break 
+the block). Creating patterns and spelling things can also signal higher 
+levels. As levels increase, the blocks will also get closer to the paddle.
+
+Different Blocks:
+- blocks of different colors that need to be hit multiple times to break (each
+  hit changes the color and the hits needed to break the block)
+- power up bricks that drop power ups to the paddle
+- "?" bricks that randomly change the direction of the ball or drop a "power
+  down" something that makes the game harder to play
+
+Different Power Ups:
+- make the paddle bigger
+- make ball stronger (ball can break harder blocks more easily)
+- paddle speed up (make the paddle move faster)
+- multiple balls (has numerous balls on screen)
+- shoot bricks from paddle
+
+Cheat Keys:
+- number keys can be used to jump between levels
+- using the "l" key adds a life to the user
+- using the "a" key makes the ball much stronger (can go through bricks)
+
+Something Extra:
+I will add another paddle at the top of the screen that will be used to hit the
+ball back instead of the top of the screen default bouncing the ball. The big, 
+substantial features that I am adding are the feature of the bricks reappearing
+after some event and a substantial number of power ups (and power downs).
