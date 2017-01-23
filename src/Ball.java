@@ -57,6 +57,10 @@ public class Ball extends ImageView {
 	}
 
 	public boolean ballBrickCollision(Brick currBrick) {
+		/**
+		 * function that determines if and where the ball hits a brick, the
+		 * boolean return helps to make code more readable in the main file
+		 */
 		boolean didHit = false;
 		if ((currBrick.brickHit(this.getX() + this.getFitWidth() / 2, this.getY()) && yAngle < 0)
 				|| (currBrick.brickHit(this.getX() + this.getFitWidth() / 2, this.getY() + this.getFitHeight())
@@ -74,6 +78,9 @@ public class Ball extends ImageView {
 	}
 
 	public void ballWallCollision(double sceneWidth, double sceneHeight) {
+		/**
+		 * allows the ball to bounce off the walls of the screen
+		 */
 		if (this.getY() < 0 && yAngle < 0) {
 			this.setAngles(xAngle, -1 * yAngle);
 		}
@@ -83,6 +90,10 @@ public class Ball extends ImageView {
 	}
 
 	public void ballPaddleCollision(Paddle currPaddle) {
+		/**
+		 * dynamically calculates the return angle of the ball when it hits the
+		 * paddle using trigonometry, this ensures that every brick can be hit
+		 */
 		if ((this.getX() + this.getFitWidth() / 2 > currPaddle.getX())
 				&& (this.getX() - this.getFitWidth() / 2 < currPaddle.getX() + currPaddle.getFitWidth())
 				&& ((this.getY() + this.getFitHeight()) == currPaddle.getY() && yAngle > 0)) {
@@ -111,6 +122,9 @@ public class Ball extends ImageView {
 	}
 
 	public void moveFrame(double elapsedTime) {
+		/**
+		 * moves the ball if it is not stationary
+		 */
 		if (xAngle != 0 && yAngle != 0) {
 			this.setX(this.getX() + xAngle * ballVelocity * elapsedTime);
 			this.setY(this.getY() + yAngle * ballVelocity * elapsedTime);

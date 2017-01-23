@@ -30,6 +30,7 @@ public class Breakout extends Application {
 	public static final String POWER_BRICK_IMG = "brick10.gif";
 	public static final String PADDLE_IMAGE = "paddle.gif";
 	public static final String BRICK_IMAGE_FILE = "brick_images.txt";
+	public static final int MAX_LEVELS = 3;
 
 	private Timeline animation;
 	private Group root;
@@ -63,7 +64,10 @@ public class Breakout extends Application {
 	}
 
 	private Scene setupGame(int width, int height, Paint background) {
-		CurrentLevel = 1;
+		/*
+		 * this part of code borrows heavily from the lab_bounce written by Professor Duvall
+		 */
+		CurrentLevel = 3;
 		LivesLeft = NUMBER_OF_LIVES;
 		levelNames = new ArrayList<>();
 		readInFile(LEVEL_NAMES, levelNames);
@@ -75,15 +79,19 @@ public class Breakout extends Application {
 		// create a place to see the shapes
 		initiatePowerups();
 		startNextLevel();
-		myScene = new Scene(root, width, height+35, background);
+		// 35 is "Magic Number" that allows the user to see the current stats of
+		// the game
+		myScene = new Scene(root, width, height + 35, background);
 		myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 		myScene.setOnMouseMoved(e -> handleMouseInput(e.getX()));
 		return myScene;
 	}
 
 	private void step(double elapsedTime) {
+		// iterates through each of the balls since multiball is possible
 		for (int i = 0; i < myBouncers.size(); i++) {
 			myBouncers.get(i).moveFrame(elapsedTime);
+			// iterates through each of the bricks
 			for (int j = 0; j < myBricks.size(); j++) {
 				if (myBouncers.get(i).ballBrickCollision(myBricks.get(j))) {
 					Score += myBricks.get(j).getScore();
@@ -95,6 +103,8 @@ public class Breakout extends Application {
 					myBricks.get(j).decrementHits(myBouncers.get(i).getBallStrength());
 					if (myBricks.get(j).getHitsLeft() < 0) {
 						root.getChildren().remove(myBricks.get(j));
+						// the -- is for resizing of the loop since the list is
+						// resized
 						myBricks.remove(j--);
 					} else
 						myBricks.get(j).setNewImage(getImage(brickIcons.get(myBricks.get(j).getHitsLeft())));
@@ -104,9 +114,12 @@ public class Breakout extends Application {
 			myBouncers.get(i).ballPaddleCollision(myPaddle);
 			if (myBouncers.get(i).deadBall(SIZE)) {
 				root.getChildren().remove(myBouncers.get(i));
+				// the -- is for resizing of the loop since the list is
+				// resized
 				myBouncers.remove(i--);
 			}
 		}
+		// loop to iterate through the powerups as they drop from their bricks
 		for (int i = 0; i < brickPowers.size(); i++) {
 			brickPowers.get(i).dropPowerBall(elapsedTime);
 			if (brickPowers.get(i).hitPaddle(myPaddle)) {
@@ -118,24 +131,31 @@ public class Breakout extends Application {
 				brickPowers.remove(i);
 			}
 		}
+		// when the bricks are cleared, move onto the next level
 		if (myBouncers.size() < 1) {
 			LivesLeft--;
 			myBouncers.add(new Ball(10, myPaddle, 300, getImage(BALL_IMAGE)));
 			root.getChildren().add(myBouncers.get(0));
 		}
 		if (myBricks.size() == 0) {
+			if (CurrentLevel == MAX_LEVELS) {
+				System.out.println("Congratulations, you won! Your final score is: " + Score);
+				System.exit(1);
+			}
 			animation.stop();
 			CurrentLevel++;
 			startNextLevel();
 			animation.play();
 		}
 		if (LivesLeft == 0) {
-			// initializeNextLevel();
+			System.out.println("GAME OVER! Your final score is: " + Score);
+			System.exit(1);
 		}
 		updateStatus();
 	}
 
 	private void handleKeyInput(KeyCode code) {
+		// Lauches ball from paddle
 		for (Ball currBall : myBouncers) {
 			if (currBall.getXAngle() == 0 && currBall.getYAngle() == 0) {
 				if (code == KeyCode.SPACE)
@@ -166,6 +186,10 @@ public class Breakout extends Application {
 	}
 
 	private void readInFile(String fileName, ArrayList<String> readArr) {
+		/**
+		 * simple file reader to read in various files into an ArrayList of
+		 * Strings
+		 */
 		Scanner input = new Scanner(getClass().getClassLoader().getResourceAsStream((fileName)));
 		while (input.hasNextLine()) {
 			readArr.add(input.nextLine());
@@ -174,6 +198,10 @@ public class Breakout extends Application {
 	}
 
 	private void initializeLevel(String fileName) {
+		/**
+		 * function to create a new ArrayList of bricks that is to be displayed
+		 * in the scene
+		 */
 		myBricks = new ArrayList<>();
 		Scanner input = new Scanner(getClass().getClassLoader().getResourceAsStream((fileName)));
 		while (input.hasNext()) {
@@ -190,10 +218,18 @@ public class Breakout extends Application {
 	}
 
 	private Image getImage(String imgFile) {
+		/**
+		 * function used to shorten the call to get an image from a file
+		 */
 		return (new Image(getClass().getClassLoader().getResourceAsStream(imgFile)));
 	}
 
 	public void initiatePowerups() {
+		/**
+		 * created an ArrayList of objects in order to work with the powerup
+		 * numbers without the use of a switch, the classes extend an abstract
+		 * class so that they can work with this data structure
+		 */
 		myPowerups = new ArrayList<>();
 		myPowerups.add(new Multiball());
 		myPowerups.add(new ExtendPaddle(POWERUP_TIME));
@@ -201,14 +237,21 @@ public class Breakout extends Application {
 		myPowerups.add(new PaddleStick(POWERUP_TIME));
 		myPowerups.add(new StrongBall(POWERUP_TIME));
 	}
-	
+
 	public void updateStatus() {
-		myLives.setText("Lives Left: "+LivesLeft);
-		myLevel.setText("Level: "+CurrentLevel);
-		myScore.setText("Score: "+Score);
+		/**
+		 * function to update the text in the bottom left corner
+		 */
+		myLives.setText("Lives Left: " + LivesLeft);
+		myLevel.setText("Level: " + CurrentLevel);
+		myScore.setText("Score: " + Score);
 	}
-	
+
 	public void startNextLevel() {
+		/**
+		 * function that is used to both initialize the game and move between
+		 * levels
+		 */
 		root.getChildren().clear();
 		initializeLevel(levelNames.get(CurrentLevel - 1));
 		brickPowers = new ArrayList<>();
@@ -219,9 +262,9 @@ public class Breakout extends Application {
 		for (Brick currBrick : myBricks)
 			root.getChildren().add(currBrick);
 		root.getChildren().add(myBouncers.get(0));
-		myLives = new Text(4, SIZE+30, "Lives Left: "+LivesLeft);
-		myLevel = new Text(4, SIZE+20, "Level: "+CurrentLevel);
-		myScore = new Text(4, SIZE+10, "Score: "+Score);
+		myLives = new Text(4, SIZE + 30, "Lives Left: " + LivesLeft);
+		myLevel = new Text(4, SIZE + 20, "Level: " + CurrentLevel);
+		myScore = new Text(4, SIZE + 10, "Score: " + Score);
 		root.getChildren().add(myLives);
 		root.getChildren().add(myLevel);
 		root.getChildren().add(myScore);

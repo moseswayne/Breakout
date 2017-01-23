@@ -29,7 +29,7 @@ public class Brick extends ImageView {
 	}
 
 	public int getScore() {
-		return (hitsLeft+1) * (hitsLeft+1) * SCORE_PER_BRICK;
+		return (hitsLeft + 1) * (hitsLeft + 1) * SCORE_PER_BRICK;
 	}
 
 	public void decrementHits(int numHits) {
@@ -37,6 +37,9 @@ public class Brick extends ImageView {
 	}
 
 	public boolean brickHit(double ballCoordX, double ballCoordY) {
+		/**
+		 * determines quickly whether a brick is hit
+		 */
 		if (ballCoordX > this.getX() && ballCoordX < (this.getX() + this.getFitWidth()) && ballCoordY > this.getY()
 				&& ballCoordY < (this.getY() + this.getFitHeight())) {
 			return true;
@@ -45,6 +48,9 @@ public class Brick extends ImageView {
 	}
 
 	public void setNewImage(Image newImage) {
+		/**
+		 * changes image so that the brick can transition between states
+		 */
 		brickPic = newImage;
 		this.setImage(brickPic);
 	}
