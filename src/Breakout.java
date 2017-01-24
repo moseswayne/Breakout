@@ -67,7 +67,7 @@ public class Breakout extends Application {
 		/*
 		 * this part of code borrows heavily from the lab_bounce written by Professor Duvall
 		 */
-		CurrentLevel = 3;
+		CurrentLevel = 1;
 		LivesLeft = NUMBER_OF_LIVES;
 		levelNames = new ArrayList<>();
 		readInFile(LEVEL_NAMES, levelNames);
