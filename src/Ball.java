@@ -56,26 +56,6 @@ public class Ball extends ImageView {
 		return ballStrength;
 	}
 
-	public boolean ballBrickCollision(Brick currBrick) {
-		/**
-		 * function that determines if and where the ball hits a brick, the
-		 * boolean return helps to make code more readable in the main file
-		 */
-		boolean didHit = false;
-		if ((currBrick.brickHit(this.getX() + this.getFitWidth() / 2, this.getY()) && yAngle < 0)
-				|| (currBrick.brickHit(this.getX() + this.getFitWidth() / 2, this.getY() + this.getFitHeight())
-						&& yAngle >= 0)) {
-			this.setAngles(xAngle, -1 * yAngle);
-			didHit = true;
-		}
-
-		if ((currBrick.brickHit(this.getX() + this.getFitWidth(), this.getY() + this.getFitHeight() / 2) && xAngle < 0)
-				|| (currBrick.brickHit(this.getX(), this.getY() + this.getFitHeight() / 2) && xAngle >= 0)) {
-			this.setAngles(-1 * xAngle, yAngle);
-			didHit = true;
-		}
-		return didHit;
-	}
 
 	public void ballWallCollision(double sceneWidth, double sceneHeight) {
 		/**

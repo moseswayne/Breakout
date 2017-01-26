@@ -8,14 +8,14 @@ public class PowerIcon extends ImageView {
 	private int ballPower;
 	private double dropSpeed;
 
-	public PowerIcon(Brick powerBrick, double screenSize, Image ballIcon) {
-		this.setX(powerBrick.getX() + powerBrick.getFitWidth() / 2);
-		this.setY(powerBrick.getY() + powerBrick.getFitHeight());
-		this.setFitHeight(powerBrick.getFitHeight() / BRICK_SIZE_RATIO);
-		this.setFitWidth(powerBrick.getFitHeight() / BRICK_SIZE_RATIO);
+	public PowerIcon(PowerBrick myBrick, double screenSize, Image ballIcon) {
+		this.setX(myBrick.getX() + myBrick.getFitWidth() / 2);
+		this.setY(myBrick.getY() + myBrick.getFitHeight());
+		this.setFitHeight(myBrick.getFitHeight() / BRICK_SIZE_RATIO);
+		this.setFitWidth(myBrick.getFitHeight() / BRICK_SIZE_RATIO);
 		this.setImage(ballIcon);
 		dropSpeed = screenSize / SPEED_RATIO;
-		ballPower = powerBrick.getPower();
+		ballPower = myBrick.getPower();
 	}
 
 	public int getBallPower() {

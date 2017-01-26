@@ -28,6 +28,7 @@ public class Breakout extends Application {
 	public static final String LEVEL_NAMES = "breakout_levels.txt";
 	public static final String BALL_IMAGE = "ball.gif";
 	public static final String POWER_BRICK_IMG = "brick10.gif";
+	public static final String UNBRICKABLE_IMG = "brick9.gif";
 	public static final String PADDLE_IMAGE = "paddle.gif";
 	public static final String BRICK_IMAGE_FILE = "brick_images.txt";
 	public static final int MAX_LEVELS = 3;
@@ -36,6 +37,7 @@ public class Breakout extends Application {
 	private Group root;
 	private Scene myScene;
 	private ArrayList<Brick> myBricks;
+	private int numBreakable;
 	private ArrayList<Ball> myBouncers;
 	private Paddle myPaddle;
 	private ArrayList<Powerup> myPowerups;
@@ -93,22 +95,17 @@ public class Breakout extends Application {
 			myBouncers.get(i).moveFrame(elapsedTime);
 			// iterates through each of the bricks
 			for (int j = 0; j < myBricks.size(); j++) {
-				if (myBouncers.get(i).ballBrickCollision(myBricks.get(j))) {
+				if (myBricks.get(j).isBroken(myBouncers.get(i))) {
 					Score += myBricks.get(j).getScore();
-					if (myBricks.get(j).getPower() >= 0) {
-						PowerIcon powerup = new PowerIcon(myBricks.get(j), SIZE, getImage(BALL_IMAGE));
+					if (myBricks.get(j) instanceof PowerBrick) {
+						PowerIcon powerup = new PowerIcon((PowerBrick) myBricks.get(j), SIZE, getImage(BALL_IMAGE));
 						brickPowers.add(powerup);
 						root.getChildren().add(powerup);
 					}
-					myBricks.get(j).decrementHits(myBouncers.get(i).getBallStrength());
-					if (myBricks.get(j).getHitsLeft() < 0) {
-						root.getChildren().remove(myBricks.get(j));
-						// the -- is for resizing of the loop since the list is
-						// resized
-						myBricks.remove(j--);
-					} else
-						myBricks.get(j).setNewImage(getImage(brickIcons.get(myBricks.get(j).getHitsLeft())));
-				}
+					root.getChildren().remove(myBricks.get(j));
+					myBricks.remove(j--);
+					numBreakable--;
+				}				
 			}
 			myBouncers.get(i).ballWallCollision(SIZE, SIZE);
 			myBouncers.get(i).ballPaddleCollision(myPaddle);
@@ -137,7 +134,7 @@ public class Breakout extends Application {
 			myBouncers.add(new Ball(10, myPaddle, 300, getImage(BALL_IMAGE)));
 			root.getChildren().add(myBouncers.get(0));
 		}
-		if (myBricks.size() == 0) {
+		if (numBreakable == 0) {
 			if (CurrentLevel == MAX_LEVELS) {
 				System.out.println("Congratulations, you won! Your final score is: " + Score);
 				System.exit(1);
@@ -209,10 +206,18 @@ public class Breakout extends Application {
 			int brickY = input.nextInt();
 			int brickStrength = input.nextInt();
 			int brickPower = input.nextInt();
-			Image brickImg = getImage(brickIcons.get(brickStrength));
-			if (brickPower >= 0)
-				brickImg = getImage(POWER_BRICK_IMG);
-			myBricks.add(new Brick(SIZE, brickX, brickY, brickStrength, brickPower, brickImg));
+			Brick thisBrick;
+			if (brickStrength>=0) {
+				thisBrick = new NormalBrick(SIZE, brickX, brickY, brickStrength, brickIcons);
+				numBreakable++;
+			}
+			else if (brickPower>=0) {
+				thisBrick = new PowerBrick(SIZE, brickX, brickY, brickPower, getImage(POWER_BRICK_IMG));
+				numBreakable++;
+			} else {
+				thisBrick = new UnbrickableBrick(SIZE, brickX, brickY, getImage(UNBRICKABLE_IMG));
+			}
+			myBricks.add(thisBrick);
 		}
 		input.close();
 	}
@@ -253,6 +258,7 @@ public class Breakout extends Application {
 		 * levels
 		 */
 		root.getChildren().clear();
+		numBreakable = 0;
 		initializeLevel(levelNames.get(CurrentLevel - 1));
 		brickPowers = new ArrayList<>();
 		myPaddle = new Paddle(SIZE, getImage(PADDLE_IMAGE));
