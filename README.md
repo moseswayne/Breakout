@@ -11,7 +11,7 @@ Known bugs: pressing "M" too many times during the game can cause errors and a f
 Extra features: dynamic angle calculation off the paddle, this ensures that every brick can be hit
 
 
-
+NOTE: datafiles and images MUST be set to source folders for proper function
 Run Breakout.java to initiate the game.
 
 Cheat codes:
